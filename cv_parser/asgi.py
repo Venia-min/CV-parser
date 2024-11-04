@@ -1,5 +1,5 @@
 """
-ASGI config for CV_parser project.
+ASGI config for cv_parser project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'CV_parser.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cv_parser.settings')
 
 application = get_asgi_application()
