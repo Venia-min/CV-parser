@@ -10,10 +10,11 @@ VALID_EXTENSIONS = [
 ]
 
 
-def validate_file_extension(file_object: UploadedFile):
+def validate_file_extension(file_object: UploadedFile) -> str:
     ext: str = os.path.splitext(file_object.name)[1]
     if ext.lower() not in VALID_EXTENSIONS:
         raise ValidationError(f"Only PDF and Docx formats are allowed. {ext} detected")
+    return ext
 
 
 def validate_file_size(file_object: UploadedFile):
