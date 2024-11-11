@@ -64,5 +64,11 @@ def extract_resume_info(text: str):
         response_body = json.loads(response.get("body").read())
         response_text: str = response_body["generation"]
 
+        start_extract_information = response_text.find("{")
+        end_extract_information = response_text.find("}")
+        json_str = response_text[start_extract_information: end_extract_information + 1]
+        data = json.loads(json_str)
+
     except Exception as err:
         raise ValidationError(f"Something went wrong: {err}", 500)
+    return data

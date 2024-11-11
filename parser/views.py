@@ -19,6 +19,7 @@ def upload_resume(request: HttpRequest):
             validate_file_size(file)
             file_content = read_uploaded_file(file, ext)
             data = extract_resume_info(file_content)
+            return JsonResponse(data, status=200)
         except ValidationError as err:
             return JsonResponse({"error": err.message}, status=400)
     return JsonResponse({"error": "Invalid Request"}, status=400)
