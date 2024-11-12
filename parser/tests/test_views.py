@@ -1,6 +1,8 @@
 from django.test.client import Client
 from django.urls import reverse
-from django.core.files.uploadedfile import UploadedFile, SimpleUploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile
+
+from unittest.mock import MagicMock
 
 
 def test_home(client: Client):
@@ -19,8 +21,22 @@ class TestUploadResume:
         assert response.status_code == 400
         assert "error" in response.json()
 
-    def test_upload_pdf_file(self, client: Client, generate_pdf_file):
+    def test_upload_pdf_file(self, client: Client, mock_invoke_model: MagicMock, generate_pdf_file):
         with open(generate_pdf_file, "rb") as uploaded_file:
             response = client.post(self.upload_resume_url, {"file": uploaded_file}, format="multipart")
-            print(response.json())
+
         assert response.status_code == 200
+        mock_invoke_model.assert_called_once()
+        call_arguments: dict = mock_invoke_model.call_args.kwargs
+        assert call_arguments.get("contentType") == "application/json"
+        assert call_arguments.get("modelId") == "meta.llama2-70b-chat-v1"
+
+    def test_upload_doc_file(self, client: Client, mock_invoke_model: MagicMock, generate_doc_file):
+        with open(generate_doc_file, "rb") as uploaded_file:
+            response = client.post(self.upload_resume_url, {"file": uploaded_file}, format="multipart")
+
+        assert response.status_code == 200
+        mock_invoke_model.assert_called_once()
+        call_arguments: dict = mock_invoke_model.call_args.kwargs
+        assert call_arguments.get("contentType") == "application/json"
+        assert call_arguments.get("modelId") == "meta.llama2-70b-chat-v1"
